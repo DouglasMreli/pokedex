@@ -1,7 +1,11 @@
 
-function convertPokemonTypesToLi(pokemonTypes) {
-    return pokemonTypes.map((typeSlot)=>`<li class="type">${typeSlot.type.name}</li>`)
-}
+const pokemonList = document.getElementById("pokemonList");
+const loadMoreButton = document.getElementById("loadMoreButton");
+
+const maxRecords = 151;
+
+const limit = 5;
+let offset = 0;
 
 function convertPokemonToLi(pokemon) {
     return `
@@ -19,11 +23,38 @@ function convertPokemonToLi(pokemon) {
     `
 }
 //src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.order}.png"
-const pokemonList = document.getElementById("pokemonList");
 
-pokeApi.getPokemons(0,50).then((pokemons = [])=>{
-    pokemonList.innerHTML += pokemons.map(convertPokemonToLi).join('');
+function loadPokemonItens(offset, limit) {
+    pokeApi.getPokemons(offset,limit).then((pokemons = [])=>{
+        pokemonList.innerHTML += pokemons.map((pokemon) =>
+            `
+        <li class="pokemon ${pokemon.type}">
+        <span class="number">#${pokemon.number}</span>
+        <span class="name">${pokemon.name}</span>
+        <div class="detail">
+            <ol class="types">
+                ${pokemon.types.map((type)=> `<li class="type ${type}">${type}</li>`).join('')}
+            </ol>
+            
+            <img src=${pokemon.image} alt="${pokemon.name}">
+        </div>
+        </li>`)
+        .join('');
+    })
+}
 
+loadMoreButton.addEventListener('click', ()=>{
+    offset += limit
+    const qtdRecordsWithNexPage = offset + limit
+
+    if (qtdRecordsWithNexPage >= maxRecords) {
+        const newLimit = maxRecords - offset
+        loadPokemonItens(offset, newLimit)
+
+        loadMoreButton.parentElement.removeChild(loadMoreButton)
+    } else {
+        loadPokemonItens(offset, limit)
+    }
 })
 
-
+loadPokemonItens(offset, limit);

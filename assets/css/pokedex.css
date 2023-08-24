@@ -59,6 +59,30 @@
     height: 150px;
 }
 
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.loadMoreButton {
+    padding: .75rem .75rem;
+    border: none;
+    border-radius: 1rem;
+    background-color: #FE1515;
+    color: white;
+    font-size: .825rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.loadMoreButton:hover {
+    background-color: #FE2535;
+}
+
 .normal {
     background-color: #a6a877;
 }
